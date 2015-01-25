@@ -24,7 +24,6 @@ module.exports.buildNavbar = function (members) {
 
 
 module.exports.addInlineNavToMembers = function (members, data) {
-  console.log(Object.keys(members));
   _.each(members, function (member, title) {
     if (title === 'globals') { return; }
     _.each(member, function (thing) {
@@ -42,7 +41,7 @@ module.exports.addInlineNavToMembers = function (members, data) {
       }
       ret.push('</li>');
 
-      var stuff = module.exports.getStuff(data, thing, title === 'globals');
+      var stuff = getStuff(data, thing, title === 'globals');
       ret.push(stuff.join(''));
 
       ret.push('</ul>');
@@ -54,12 +53,12 @@ module.exports.addInlineNavToMembers = function (members, data) {
 module.exports.addInlineNavToGlobal = function (data) {
   return [
     '<ul class="nav nav-stacked fixed">',
-    module.exports.getStuff(data, {id: 'global'}, true).join(''),
+    getStuff(data, {id: 'global'}, true).join(''),
     '</ul>'
   ].join('');
 };
 
-module.exports.getStuff = function (data, thing, global) {
+function getStuff(data, thing, global) {
   var stuff = {
     'Classes': 'class',
     'Mixins': 'mixin',
@@ -79,7 +78,6 @@ module.exports.getStuff = function (data, thing, global) {
       kind === 'external' ||
       kind === 'interface') ) { return; }
 
-    //var htmlid = thing.longname + '.html';
     var filter = {'kind': kind, 'memberof': global ? {'isUndefined': true} : thing.longname};
     var seen = {};
     var list = data().filter(filter).map(function (doclet) {
@@ -101,5 +99,4 @@ module.exports.getStuff = function (data, thing, global) {
     ret.push('</li>');
     return ret.join('');
   });
-};
-
+}
