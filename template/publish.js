@@ -10,6 +10,8 @@ var taffy = require('taffydb').taffy;
 var template = require('jsdoc/template');
 var util = require('util');
 
+var myOverrides = require('./publish-overwrites.js');
+
 var htmlsafe = helper.htmlsafe;
 var linkto = helper.linkto;
 var resolveAuthorLinks = helper.resolveAuthorLinks;
@@ -208,10 +210,10 @@ function getPathFromDoclet(doclet) {
 
 function generate(title, docs, filename, resolveLinks) {
     resolveLinks = resolveLinks === false ? false : true;
-
     var docData = {
         title: title,
-        docs: docs
+        docs: docs,
+        name: env.conf.templates.name || 'JSDoc'
     };
 
     var outpath = path.join(outdir, filename),
@@ -541,6 +543,8 @@ exports.publish = function(taffyData, opts, tutorials) {
     var members = helper.getMembers(data);
     members.tutorials = tutorials.children;
 
+    myOverrides.addInlineNavToMembers(members, data);
+
     // output pretty-printed source files by default
     var outputSourceFiles = conf.default && conf.default.outputSourceFiles !== false ? true :
         false;
@@ -554,7 +558,7 @@ exports.publish = function(taffyData, opts, tutorials) {
     view.outputSourceFiles = outputSourceFiles;
 
     // once for all
-    view.nav = buildNav(members);
+    view.nav = myOverrides.buildNavbar(members);
     attachModuleSymbols( find({ longname: {left: 'module:'} }), members.modules );
 
     // generate the pretty-printed source files first so other pages can link to them
@@ -562,7 +566,11 @@ exports.publish = function(taffyData, opts, tutorials) {
         generateSourceFiles(sourceFiles, opts.encoding);
     }
 
-    if (members.globals.length) { generate('Global', [{kind: 'globalobj'}], globalUrl); }
+    if (members.globals.length) { generate('Global', [{
+      kind: 'globalobj',
+      id: 'global',
+      inlineNav: myOverrides.addInlineNavToGlobal(data)
+    }], globalUrl); }
 
     // index page displays information from package.json and lists files
     var files = find({kind: 'file'}),
