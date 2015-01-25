@@ -1,0 +1,8 @@
+!.gitkeep
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+node_modules
+*sublime*
+.idea

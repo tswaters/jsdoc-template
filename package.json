@@ -1,0 +1,19 @@
+{
+  "name": "jsdoc-template",
+  "version": "0.0.0",
+  "description": "",
+  "main": "template/publish.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tswaters/jsdoc-template.git"
+  },
+  "author": "Tyler Waters",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tswaters/jsdoc-template/issues"
+  },
+  "homepage": "https://github.com/tswaters/jsdoc-template",
+  "peerDependencies": {
+    "jsdoc": "^3.3.0-beta1"
+  }
+}
